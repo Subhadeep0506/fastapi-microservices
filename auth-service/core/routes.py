@@ -84,8 +84,30 @@ def login_user(
     access = create_access_token(user.id)
     refresh = create_refresh_token(user.id)
 
+    try:
+        last_token = (
+            db.query(Token)
+            .filter(Token.user_id == user.id)
+            .order_by(Token.created_date.desc())
+            .first()
+        )
+        if last_token is not None:
+            last_token.status = False
+            db.add(last_token)
+            db.commit()
+            db.refresh(last_token)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to register user info. An exception occured: {e}",
+        )
+
     token_db = Token(
-        user_id=user.id, access_token=access, refresh_token=refresh, status=True
+        id=str(uuid4()),
+        user_id=user.id,
+        access_token=access,
+        refresh_token=refresh,
+        status=True,
     )
     try:
         db.add(token_db)

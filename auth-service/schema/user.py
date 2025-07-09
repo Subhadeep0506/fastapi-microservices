@@ -7,7 +7,6 @@ from ..utils.roles import Role
 
 
 class UserCreate(BaseModel):
-    id: Optional[str] = str(uuid.uuid4())
     username: str
     email: EmailStr
     password: str

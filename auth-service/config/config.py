@@ -16,6 +16,7 @@ class FastAPIConfig:
     if not creds_loaded:
         raise ValueError("Failed to fetch confiurations from Infisical.")
     DATABASE_URL: str = os.environ["DATABASE_URL"]
+    CERTIFICATE_PATH: str = "ca.pem"
     ACCESS_TOKEN_EXPIRE_MINUTES = 30
     REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
     ALGORITHM = "HS256"
